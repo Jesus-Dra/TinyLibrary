@@ -3,7 +3,7 @@ package com.tinylibrary.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "User")
+@Table(name = "users")
 public class User {
 
     @Id
