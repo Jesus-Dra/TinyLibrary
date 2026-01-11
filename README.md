@@ -8,9 +8,10 @@ Este proyecto forma parte de mi proceso de aprendizaje y consolidación como **B
 
 ## 🚀 Versión actual
 
-**v0.0.1 – Initial Setup**
+**v0.1.0 – User CRUD implemented**
 
-> Primera versión funcional del proyecto, enfocada en la definición del dominio y la persistencia de datos.
+Primera versión funcional de la API, con CRUD completo del módulo User,
+manejo de excepciones personalizadas y arquitectura en capas.
 
 ---
 
