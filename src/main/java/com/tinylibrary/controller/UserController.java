@@ -1,11 +1,14 @@
 package com.tinylibrary.controller;
 
+import com.tinylibrary.dto.UserRequestDTO;
+import com.tinylibrary.dto.UserResponseDTO;
 import com.tinylibrary.entity.User;
 import com.tinylibrary.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tinyLibrary/user")
@@ -18,37 +21,35 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUser(){
-        List<User> allUser = userService.getAllUser();
-
-        return allUser;
+    public List<UserResponseDTO> getAllUser(){
+        return userService.getAllUser();
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getOneUser(@PathVariable Integer id){
-        Optional<User> oneUser = userService.getOneUser(id);
+    public ResponseEntity<UserResponseDTO> getOneUser(@PathVariable Integer id){
+        UserResponseDTO oneUser = userService.getOneUser(id);
 
-        return oneUser;
+        return ResponseEntity.ok(oneUser);
     }
 
     @PostMapping
-    public User createNewuser(@RequestBody User user){
-        User createNewUser = userService.createUser(user);
+    public ResponseEntity<UserResponseDTO> createNewUser(@Valid @RequestBody UserRequestDTO dto){
+        UserResponseDTO createNewUser = userService.createUser(dto);
 
-        return createNewUser;
+        return ResponseEntity.ok(createNewUser);
     }
 
     @PutMapping("/{id}")
-    public User UpdateUser(@PathVariable Integer id, @RequestBody User user){
-        User userUpdate = userService.updateUser(id, user);
+    public ResponseEntity<UserResponseDTO> UpdateUser(@Valid @PathVariable Integer id, @RequestBody UserRequestDTO dto){
+        UserResponseDTO userUpdate = userService.updateUser(id, dto);
 
-        return userUpdate;
+        return ResponseEntity.ok(userUpdate);
     }
 
     @DeleteMapping("/{id}")
-    public User deleteUser(@PathVariable Integer id){
+    public ResponseEntity<User> deleteUser(@PathVariable Integer id){
         User userDelete = userService.deleteUser(id);
 
-        return userDelete;
+        return ResponseEntity.ok(userDelete);
     }
 }

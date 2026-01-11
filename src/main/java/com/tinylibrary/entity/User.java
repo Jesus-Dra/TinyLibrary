@@ -16,7 +16,7 @@ public class User {
     @Column(name = "age", nullable = false)
     private Integer age;
 
-    @Column(name = "correo", nullable = false, length = 100)
+    @Column(name = "correo", nullable = false, length = 100, unique = true)
     private String correo;
 
     public User(){}
