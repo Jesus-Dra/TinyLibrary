@@ -17,8 +17,11 @@ public class Book {
     @Column(name = "editorial", length = 100, nullable = false)
     private String editorial;
 
-    @Column(name = "ageBook", nullable = false)
-    private Integer ageBook;
+    @Column(name = "agebook", nullable = false)
+    private Integer agebook;
+
+    @Column(name = "status", nullable = false)
+    private String status;
 
     public Book(){}
 
@@ -46,11 +49,19 @@ public class Book {
         this.editorial = editorial;
     }
 
-    public Integer getAgeBook() {
-        return ageBook;
+    public Integer getAgebook() {
+        return agebook;
     }
 
-    public void setAgeBook(Integer ageBook) {
-        this.ageBook = ageBook;
+    public void setAgebook(Integer agebook) {
+        this.agebook = agebook;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

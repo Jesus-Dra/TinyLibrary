@@ -16,10 +16,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(NameBookNotFound.class)
+    public ResponseEntity<apiError> handleBookNotFound(NameBookNotFound ex, HttpServletRequest request){
+        apiError error = new apiError(HttpStatus.NOT_FOUND.
+                value(), "Libro no encontrado", ex.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(CorreoAlreadyExistException.class)
     public  ResponseEntity<apiError> handleCorreoNotFound(CorreoAlreadyExistException ex, HttpServletRequest request){
         apiError error = new apiError(HttpStatus.CONFLICT.
                 value(),"Correo ya registrado", ex.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(NameAlreadyExistException.class)
+    public  ResponseEntity<apiError> handleNameAlready(NameAlreadyExistException ex, HttpServletRequest request){
+        apiError error = new apiError(HttpStatus.CONFLICT.
+                value(),"El nombre de este libro ya esta registrado", ex.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }

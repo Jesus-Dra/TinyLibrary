@@ -88,7 +88,7 @@ public class UserService {
 
         User update = userRepository.save(existing);
         return entityToDto(update);
-        
+
     }
 
     public User deleteUser(Integer id){
