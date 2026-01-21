@@ -1,5 +1,6 @@
 package com.tinylibrary.dto;
 
+import com.tinylibrary.enums.BookStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,10 +19,6 @@ public class BookRequestDTO {
     @NotNull
     @Min(1800)
     private Integer agebook;
-
-    @NotBlank
-    @Size(min = 2, max = 50)
-    private String status;
 
     public String getName() {
         return name;
@@ -45,13 +42,5 @@ public class BookRequestDTO {
 
     public void setAgebook(Integer agebook) {
         this.agebook = agebook;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

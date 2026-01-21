@@ -4,6 +4,7 @@ package com.tinylibrary.service;
 import com.tinylibrary.dto.BookRequestDTO;
 import com.tinylibrary.dto.BookResponseDTO;
 import com.tinylibrary.entity.Book;
+import com.tinylibrary.enums.BookStatus;
 import com.tinylibrary.exception.NameAlreadyExistException;
 import com.tinylibrary.exception.NameBookNotFound;
 import com.tinylibrary.repository.BookRepository;
@@ -29,7 +30,6 @@ public class BookService {
         convert.setName(dto.getName());
         convert.setEditorial(dto.getEditorial());
         convert.setAgebook(dto.getAgebook());
-        convert.setStatus(dto.getStatus());
 
         return convert;
     }
@@ -57,12 +57,24 @@ public class BookService {
         return listAllBook;
     }
 
+    public List<BookResponseDTO> getAllBookAvailable(){
+
+        return bookRepository.findByStatus(BookStatus.AVAILABLE).stream().map(this::entityToDto).toList();
+    }
+
+    public List<BookResponseDTO> getAllBookBorrowed(){
+
+        return  bookRepository.findByStatus(BookStatus.BORROWED).stream().map(this::entityToDto).toList();
+    }
+
     public BookResponseDTO createBook(BookRequestDTO dto){
         bookRepository.findByName(dto.getName()).ifPresent(userExisting -> {
             throw new NameAlreadyExistException("El nombre del libro que intenta crear ya esta registrado "+dto.getName());
         });
 
         Book bookEntity = dtoToEntity(dto);
+
+        bookEntity.setStatus(BookStatus.AVAILABLE);
 
         bookRepository.save(bookEntity);
 
@@ -83,7 +95,6 @@ public class BookService {
         book.setName(dto.getName());
         book.setEditorial(dto.getEditorial());
         book.setAgebook(dto.getAgebook());
-        book.setStatus(dto.getStatus());
 
         return entityToDto(bookRepository.save(book));
 
@@ -131,10 +142,6 @@ public class BookService {
 
         if(dto.getAgebook() != null){
             book.setAgebook(dto.getAgebook());
-        }
-
-        if(dto.getStatus() != null){
-            book.setStatus(dto.getStatus());
         }
 
         if(dto.getEditorial() != null){

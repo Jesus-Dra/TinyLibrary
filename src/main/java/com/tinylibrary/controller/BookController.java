@@ -26,6 +26,16 @@ public class BookController {
         return bookService.getAllBook();
     }
 
+    @GetMapping("/available")
+    public List<BookResponseDTO> getAllBookAvailable(){
+        return bookService.getAllBookAvailable();
+    }
+
+    @GetMapping("/borrowed")
+    public List<BookResponseDTO> getAllBookBorrowed(){
+        return bookService.getAllBookBorrowed();
+    }
+
     @PostMapping()
     public ResponseEntity<BookResponseDTO> createBook(@Valid @RequestBody BookRequestDTO dto){
         BookResponseDTO bookCreate = bookService.createBook(dto);

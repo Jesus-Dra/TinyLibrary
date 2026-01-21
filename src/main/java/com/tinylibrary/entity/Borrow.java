@@ -1,5 +1,7 @@
 package com.tinylibrary.entity;
 
+import com.tinylibrary.enums.BookStatus;
+import com.tinylibrary.enums.BorrowStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -23,11 +25,12 @@ public class Borrow {
     @Column(name = "borrow_date", nullable = false)
     private LocalDateTime borrow_date;
 
-    @Column(name = "return_date", nullable = false)
-    private LocalDateTime return_date;
+    @Column(name = "return_date")
+    private LocalDateTime returnDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private BorrowStatus status;
 
     public Borrow(){}
 
@@ -63,19 +66,19 @@ public class Borrow {
         this.borrow_date = borrow_date;
     }
 
-    public LocalDateTime getReturn_date() {
-        return return_date;
+    public LocalDateTime getReturnDate() {
+        return returnDate;
     }
 
-    public void setReturn_date(LocalDateTime return_date) {
-        this.return_date = return_date;
+    public void setReturnDate(LocalDateTime returnDate) {
+        this.returnDate = returnDate;
     }
 
-    public String getStatus() {
+    public BorrowStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(BorrowStatus status) {
         this.status = status;
     }
 }

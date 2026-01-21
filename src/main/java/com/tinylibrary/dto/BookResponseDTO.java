@@ -1,11 +1,13 @@
 package com.tinylibrary.dto;
 
+import com.tinylibrary.enums.BookStatus;
+
 public class BookResponseDTO {
 
     private String name;
     private Integer agebook;
     private String editorial;
-    private String status;
+    private BookStatus status;
 
     public String getName() {
         return name;
@@ -31,11 +33,11 @@ public class BookResponseDTO {
         this.editorial = editorial;
     }
 
-    public String getStatus() {
+    public BookStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(BookStatus status) {
         this.status = status;
     }
 }

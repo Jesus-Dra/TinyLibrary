@@ -1,6 +1,7 @@
 package com.tinylibrary.entity;
 
 
+import com.tinylibrary.enums.BookStatus;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,8 +21,9 @@ public class Book {
     @Column(name = "agebook", nullable = false)
     private Integer agebook;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private BookStatus status;
 
     public Book(){}
 
@@ -57,11 +59,11 @@ public class Book {
         this.agebook = agebook;
     }
 
-    public String getStatus() {
+    public BookStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(BookStatus status) {
         this.status = status;
     }
 }
