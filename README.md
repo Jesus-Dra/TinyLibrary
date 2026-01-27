@@ -1,33 +1,37 @@
 # 📚 TinyLibrary API
 
-TinyLibrary es una API REST desarrollada con Java y Spring Boot que simula un
-sistema básico de biblioteca, permitiendo la gestión de usuarios y libros.
-
-Este proyecto forma parte de mi proceso de aprendizaje y consolidación como
-Backend Developer, aplicando buenas prácticas de arquitectura, persistencia
-y control de excepciones.
+TinyLibrary es una API REST desarrollada con **Java y Spring Boot** que simula un sistema básico de gestión de una biblioteca.  
+El proyecto forma parte de mi proceso de aprendizaje y consolidación como **Backend Developer**, aplicando buenas prácticas de arquitectura, diseño de dominio y manejo de reglas de negocio.
 
 ---
 
 ## 🚀 Versión actual
 
-**v0.2.0 – User & Book CRUD implemented**
+### v0.4.0 – Book & Borrow domain completed
 
-La API cuenta con los módulos **User** y **Book** completamente implementados,
-incluyendo validaciones de negocio, manejo de excepciones personalizadas
-y arquitectura en capas.
+Versión en la que se completa el dominio principal de la aplicación, incorporando reglas de negocio reales y control total del ciclo de vida de los libros y préstamos.
+
+**Incluye:**
+- CRUD completo de **User**
+- CRUD completo de **Book**
+- Gestión de **Borrow (préstamos)** con lógica de negocio
+- Control de estados mediante **Enums**
+- Asignación de estados controlada exclusivamente desde el backend
+- Validaciones y manejo de excepciones personalizadas
+- Filtros para libros y préstamos según su estado
 
 ---
 
 ## 📌 Estado actual del proyecto
 
-✔️ Proyecto inicializado con Spring Boot  
-✔️ CRUD completo para **User**  
-✔️ CRUD completo para **Book**  
-✔️ Validaciones de negocio (campos únicos, datos obligatorios)  
-✔️ Manejo de excepciones personalizadas con `@RestControllerAdvice`  
-✔️ Arquitectura en capas (Controller, Service, Repository, DTO)  
-✔️ Repositorio versionado en GitHub  
+✔ Proyecto inicializado con Spring Boot  
+✔ Arquitectura en capas (Controller, Service, Repository, DTO)  
+✔ CRUD completo de usuarios  
+✔ CRUD completo de libros  
+✔ Sistema de préstamos con reglas de negocio  
+✔ Manejo de excepciones con `@ControllerAdvice`  
+✔ Persistencia con JPA / Hibernate  
+✔ Control de versiones con Git  
 
 ---
 
@@ -36,23 +40,34 @@ y arquitectura en capas.
 El sistema se compone de las siguientes entidades:
 
 ### 👤 User
-Representa a los usuarios que pueden solicitar préstamos.
+Representa a los usuarios que pueden realizar préstamos.
 
 ### 📘 Book
-Representa los libros disponibles en la biblioteca.
-Cada libro tiene una única copia y puede estar disponible o prestado.
+Representa los libros disponibles en la biblioteca.  
+Cada libro tiene **una única copia**, y su estado es controlado por el sistema.
 
-### 🔁 Borrow *(en progreso)*
-Entidad encargada de gestionar los préstamos:
-- Relación **Many-to-One** con User  
-- Relación **Many-to-One** con Book  
-- Fecha de préstamo  
-- Fecha de devolución  
-- Estado del préstamo  
+**Estados posibles:**
+- `AVAILABLE`
+- `BORROWED`
 
-Esto permite:
-- Que un usuario pueda tener varios préstamos
-- Que un libro tenga historial de préstamos (uno activo a la vez)
+### 🔁 Borrow
+Entidad intermedia que gestiona los préstamos.
+
+Incluye:
+- Relación **Many-to-One** con User
+- Relación **Many-to-One** con Book
+- Fecha de préstamo
+- Fecha de devolución
+- Estado del préstamo
+
+**Estados posibles:**
+- `BORROWED`
+- `RETURNED`
+
+**Reglas clave:**
+- Un libro no puede prestarse si ya está en estado `BORROWED`
+- El estado del libro se actualiza automáticamente al prestar y devolver
+- La fecha de devolución se asigna solo cuando el préstamo es retornado
 
 ---
 
@@ -62,39 +77,51 @@ Esto permite:
 - Spring Boot
 - Spring Web
 - Spring Data JPA (Hibernate)
-- PostgreSQL
+- PostgreSQL / MySQL
 - Maven
 - Git & GitHub
 
 ---
 
-## 🏗️ Arquitectura
+## 🧱 Arquitectura
 
-El proyecto sigue una arquitectura en capas:
+El proyecto sigue una **arquitectura en capas**:
 
-- **Controller** – Manejo de solicitudes HTTP (API REST)
-- **Service** – Lógica de negocio
+- **Controller** – Exposición de endpoints REST
+- **Service** – Lógica de negocio y reglas del dominio
 - **Repository** – Acceso a datos con JPA
-- **DTO** – Transferencia de datos entre capas
-- **Exception** – Manejo centralizado de errores
+- **DTOs** – Separación entre modelo interno y datos expuestos
+- **Enums** – Control de estados del dominio
 
 ---
 
-## 🔜 Próximos pasos
+## 🔍 Funcionalidades destacadas
 
-- Implementar módulo **Borrow**
-- Implementar relaciones entre entidades
-- Autenticación y autorización con **Spring Security + JWT**
-- Seguridad basada en roles
-- Documentación con **Swagger / OpenAPI**
-- Tests unitarios
+- Creación automática de libros en estado `AVAILABLE`
+- Préstamo de libros con validaciones de disponibilidad
+- Devolución de libros con actualización de estado
+- Filtros para:
+  - Libros disponibles
+  - Libros prestados
+  - Préstamos activos
+  - Préstamos devueltos
+- Manejo centralizado de errores y respuestas HTTP
 
 ---
 
-## 👤 Autor
+## 🧭 Próximos pasos
 
-**Jesus Ramirez**  
+- Implementación de autenticación y autorización con **Spring Security + JWT**
+- Asociación de préstamos al usuario autenticado
+- Documentación de la API con **Swagger / OpenAPI**
+- Tests unitarios y de integración
+- Mejoras en validaciones y mensajes de error
+
+---
+
+## 👨‍💻 Autor
+
+**Jesús Ramírez**  
 Backend Developer – Java & Spring Boot  
 
-Este proyecto se desarrolla de forma progresiva como parte de mi formación
-como desarrollador backend.
+Este proyecto se desarrolla de forma progresiva como parte de mi formación y crecimiento profesional como desarrollador backend.
