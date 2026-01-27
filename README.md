@@ -1,127 +1,140 @@
 # 📚 TinyLibrary API
 
-TinyLibrary es una API REST desarrollada con **Java y Spring Boot** que simula un sistema básico de gestión de una biblioteca.  
-El proyecto forma parte de mi proceso de aprendizaje y consolidación como **Backend Developer**, aplicando buenas prácticas de arquitectura, diseño de dominio y manejo de reglas de negocio.
+TinyLibrary es una API REST desarrollada con **Spring Boot** que simula un sistema básico de gestión de biblioteca.  
+Incluye autenticación con **JWT**, seguridad con **Spring Security**, manejo de préstamos de libros y persistencia con base de datos relacional.
+
+Este proyecto forma parte de mi proceso de aprendizaje y consolidación como **Backend Developer (Java / Spring Boot)**.
 
 ---
 
-## 🚀 Versión actual
+## 📌 Versión actual
+**v0.5.0**
 
-### v0.4.0 – Book & Borrow domain completed
-
-Versión en la que se completa el dominio principal de la aplicación, incorporando reglas de negocio reales y control total del ciclo de vida de los libros y préstamos.
-
-**Incluye:**
-- CRUD completo de **User**
-- CRUD completo de **Book**
-- Gestión de **Borrow (préstamos)** con lógica de negocio
-- Control de estados mediante **Enums**
-- Asignación de estados controlada exclusivamente desde el backend
-- Validaciones y manejo de excepciones personalizadas
-- Filtros para libros y préstamos según su estado
+### ¿Qué incluye esta versión?
+- Autenticación con JWT
+- Seguridad stateless con Spring Security
+- Hashing de contraseñas con BCrypt
+- Endpoints protegidos por token
+- CRUDs completos
+- Arquitectura en capas
+- Manejo de excepciones personalizado
 
 ---
 
-## 📌 Estado actual del proyecto
+## 🧱 Estado actual del proyecto
 
-✔ Proyecto inicializado con Spring Boot  
-✔ Arquitectura en capas (Controller, Service, Repository, DTO)  
-✔ CRUD completo de usuarios  
-✔ CRUD completo de libros  
-✔ Sistema de préstamos con reglas de negocio  
-✔ Manejo de excepciones con `@ControllerAdvice`  
-✔ Persistencia con JPA / Hibernate  
-✔ Control de versiones con Git  
+### ✅ Funcionalidades implementadas
+
+#### 🔐 Autenticación y Seguridad
+- Login mediante email y contraseña
+- Generación de JWT firmado (HS256)
+- Filtro de autenticación personalizado (`OncePerRequestFilter`)
+- Validación de token en cada request
+- Seguridad Stateless
+- Passwords hasheados con BCrypt
+
+#### 📚 Libros (Book)
+- Crear libro (estado inicial `AVAILABLE`)
+- Listar libros
+- Filtrar libros disponibles / prestados
+- Control de estado (`AVAILABLE / BORROWED`)
+
+#### 🔄 Préstamos (Borrow)
+- Registrar préstamo de libro
+- Devolver libro
+- Ver préstamos activos
+- Relación User ↔ Book
+- Control de estados (`BORROWED / RETURNED`)
+
+#### 👤 Usuarios (User)
+- Creación de usuarios
+- Validación de email único
+- Contraseñas encriptadas
+- Relación con préstamos
 
 ---
 
 ## 🧠 Modelo de dominio
 
-El sistema se compone de las siguientes entidades:
+### User
+- id
+- name
+- age
+- correo (único)
+- password (BCrypt)
+- préstamos
 
-### 👤 User
-Representa a los usuarios que pueden realizar préstamos.
+### Book
+- id
+- name
+- editorial
+- agebook
+- status (`AVAILABLE / BORROWED`)
 
-### 📘 Book
-Representa los libros disponibles en la biblioteca.  
-Cada libro tiene **una única copia**, y su estado es controlado por el sistema.
+### Borrow
+- id
+- user
+- book
+- borrowDate
+- returnDate
+- status (`BORROWED / RETURNED`)
 
-**Estados posibles:**
-- `AVAILABLE`
-- `BORROWED`
+---
 
-### 🔁 Borrow
-Entidad intermedia que gestiona los préstamos.
+## 🏗️ Arquitectura
 
-Incluye:
-- Relación **Many-to-One** con User
-- Relación **Many-to-One** con Book
-- Fecha de préstamo
-- Fecha de devolución
-- Estado del préstamo
+Arquitectura en capas:
 
-**Estados posibles:**
-- `BORROWED`
-- `RETURNED`
-
-**Reglas clave:**
-- Un libro no puede prestarse si ya está en estado `BORROWED`
-- El estado del libro se actualiza automáticamente al prestar y devolver
-- La fecha de devolución se asigna solo cuando el préstamo es retornado
+- **Controller** → manejo de endpoints HTTP
+- **Service** → lógica de negocio
+- **Repository** → acceso a datos (JPA)
+- **DTOs** → separación entidad / respuesta
+- **Security** → JWT, filtros y configuración
+- **Exception** → manejo centralizado de errores
 
 ---
 
 ## 🛠️ Tecnologías utilizadas
 
-- Java
+- Java 17
 - Spring Boot
+- Spring Security
 - Spring Web
-- Spring Data JPA (Hibernate)
-- PostgreSQL / MySQL
+- Spring Data JPA
+- JWT (jjwt)
+- BCrypt
+- MySQL / PostgreSQL
 - Maven
-- Git & GitHub
+- Git
 
 ---
 
-## 🧱 Arquitectura
+## 🔐 Seguridad (detalle técnico)
 
-El proyecto sigue una **arquitectura en capas**:
-
-- **Controller** – Exposición de endpoints REST
-- **Service** – Lógica de negocio y reglas del dominio
-- **Repository** – Acceso a datos con JPA
-- **DTOs** – Separación entre modelo interno y datos expuestos
-- **Enums** – Control de estados del dominio
-
----
-
-## 🔍 Funcionalidades destacadas
-
-- Creación automática de libros en estado `AVAILABLE`
-- Préstamo de libros con validaciones de disponibilidad
-- Devolución de libros con actualización de estado
-- Filtros para:
-  - Libros disponibles
-  - Libros prestados
-  - Préstamos activos
-  - Préstamos devueltos
-- Manejo centralizado de errores y respuestas HTTP
+- Autenticación basada en **JWT**
+- Tokens firmados con clave secreta
+- Filtro personalizado que:
+  - Extrae token del header `Authorization`
+  - Valida firma y expiración
+  - Carga usuario en el `SecurityContext`
+- Endpoints protegidos por configuración de `SecurityFilterChain`
 
 ---
 
-## 🧭 Próximos pasos
+## 🚀 Próximos pasos (Roadmap)
 
-- Implementación de autenticación y autorización con **Spring Security + JWT**
-- Asociación de préstamos al usuario autenticado
-- Documentación de la API con **Swagger / OpenAPI**
-- Tests unitarios y de integración
-- Mejoras en validaciones y mensajes de error
+- Implementar roles (`ADMIN / USER`)
+- Documentación con Swagger / OpenAPI
+- Tests unitarios
+- Refresh Token
+- Dockerización
+- Manejo avanzado de permisos
 
 ---
 
-## 👨‍💻 Autor
+## 👤 Autor
 
 **Jesús Ramírez**  
-Backend Developer – Java & Spring Boot  
+Backend Developer — Java & Spring Boot  
 
-Este proyecto se desarrolla de forma progresiva como parte de mi formación y crecimiento profesional como desarrollador backend.
+Proyecto desarrollado como parte de mi formación continua y práctica profesional.
