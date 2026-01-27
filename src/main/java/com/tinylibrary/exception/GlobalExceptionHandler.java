@@ -63,4 +63,12 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public  ResponseEntity<apiError> handleInvalidCredentialsException(InvalidCredentialsException ex, HttpServletRequest request){
+        apiError error = new apiError(HttpStatus.CONFLICT.
+                value(),"CONFLICT", ex.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 }

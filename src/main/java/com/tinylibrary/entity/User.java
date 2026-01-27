@@ -19,6 +19,9 @@ public class User {
     @Column(name = "correo", nullable = false, length = 100, unique = true)
     private String correo;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     public User(){}
 
     public Integer getId() {
@@ -51,5 +54,13 @@ public class User {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

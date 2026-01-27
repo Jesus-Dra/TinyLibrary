@@ -19,6 +19,10 @@ public class UserRequestDTO {
     @Size(min = 2, max = 65)
     private String correo;
 
+    @NotBlank
+    @Size(min = 2, max = 50)
+    private String password;
+
     public String getName() {
         return name;
     }
@@ -41,5 +45,13 @@ public class UserRequestDTO {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

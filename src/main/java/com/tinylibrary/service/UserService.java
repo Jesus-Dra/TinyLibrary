@@ -1,6 +1,7 @@
 package com.tinylibrary.service;
 
 
+import com.tinylibrary.config.SecurityConfig;
 import com.tinylibrary.dto.UserRequestDTO;
 import com.tinylibrary.dto.UserResponseDTO;
 import com.tinylibrary.entity.User;
@@ -8,6 +9,7 @@ import com.tinylibrary.exception.CorreoAlreadyExistException;
 import com.tinylibrary.exception.userNotFound;
 import com.tinylibrary.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,9 +21,12 @@ import java.util.OptionalInt;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     //Entity -> DTO & DTO -> Entity
@@ -31,6 +36,7 @@ public class UserService {
         convert.setName(dto.getName());
         convert.setAge(dto.getAge());
         convert.setCorreo(dto.getCorreo());
+        convert.setPassword(passwordEncoder.encode(dto.getPassword()));
         return convert;
     }
 
