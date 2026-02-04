@@ -5,6 +5,7 @@ import com.tinylibrary.config.SecurityConfig;
 import com.tinylibrary.dto.UserRequestDTO;
 import com.tinylibrary.dto.UserResponseDTO;
 import com.tinylibrary.entity.User;
+import com.tinylibrary.enums.RoleUser;
 import com.tinylibrary.exception.CorreoAlreadyExistException;
 import com.tinylibrary.exception.userNotFound;
 import com.tinylibrary.repository.UserRepository;
@@ -74,7 +75,15 @@ public class UserService {
             throw new CorreoAlreadyExistException("El correo ya esta vinculado con otro usuario: "+dto.getCorreo());
         });
 
+        boolean adminExists = userRepository.existsByRoleUser(RoleUser.ROLE_ADMIN);
+
         User userEntity = dtoToEntity(dto);
+
+        if(!adminExists){
+            userEntity.setRoleUser(RoleUser.ROLE_ADMIN);
+        }else{
+            userEntity.setRoleUser(RoleUser.ROLE_USER);
+        }
 
         userRepository.save(userEntity);
 
@@ -109,6 +118,13 @@ public class UserService {
         }else{
             throw new userNotFound("El usuario con el id no fue encontrado: "+id);
         }
+    }
+
+    public UserResponseDTO getUserByEmail(String email){
+        User user = userRepository.findByCorreo(email)
+                .orElseThrow(()->new UsernameNotFoundException("El usuario no fue encontrado"));
+
+        return entityToDto(user);
     }
 
 }

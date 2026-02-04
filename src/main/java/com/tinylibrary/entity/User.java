@@ -1,5 +1,6 @@
 package com.tinylibrary.entity;
 
+import com.tinylibrary.enums.RoleUser;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,6 +22,10 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "roleuser", nullable = false)
+    private RoleUser roleUser;
 
     public User(){}
 
@@ -62,5 +67,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public RoleUser getRoleUser() {
+        return roleUser;
+    }
+
+    public void setRoleUser(RoleUser roleUser) {
+        this.roleUser = roleUser;
     }
 }

@@ -6,8 +6,11 @@ import com.tinylibrary.entity.User;
 import com.tinylibrary.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.Authenticator;
 import java.util.List;
 
 @RestController
@@ -51,5 +54,15 @@ public class UserController {
         User userDelete = userService.deleteUser(id);
 
         return ResponseEntity.ok(userDelete);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getMyProfile(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        System.out.println(authentication.getAuthorities());
+        UserResponseDTO user = userService.getUserByEmail(email);
+
+        return ResponseEntity.ok(user);
     }
 }

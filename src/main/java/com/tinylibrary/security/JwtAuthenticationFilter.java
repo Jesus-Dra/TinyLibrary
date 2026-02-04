@@ -26,6 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
+
     public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository){
         this.jwtService = jwtService;
         this.userRepository = userRepository;
@@ -53,18 +54,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String email = jwtService.extractEmail(token);
 
-        UserDetails userDetails = userRepository.findByCorreo(email).map(user ->
-                org.springframework.security.core.userdetails.User.withUsername(user.getCorreo())
-                        .password(user.getPassword()).authorities("ROLE_USER").build())
-                .orElseThrow(() -> new userNotFound("Usuario no encontrado"));
+        User userEntity = userRepository.findByCorreo(email)
+                .orElseThrow(() -> new userNotFound("Usuario no econtrado"));
 
-        if(userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+        String role = userEntity.getRoleUser().name();
+
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
+
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(userEntity.getCorreo()).password(userEntity.getPassword())
+                .authorities(authorities).build();
+
+        if(SecurityContextHolder.getContext().getAuthentication() == null){
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
-                    userDetails.getAuthorities()
+                    authorities
             );
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
 
         filterChain.doFilter(request, response);
