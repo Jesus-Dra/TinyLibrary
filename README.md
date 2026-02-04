@@ -1,75 +1,79 @@
 # 📚 TinyLibrary API
 
-TinyLibrary es una API REST desarrollada con **Spring Boot** que simula un sistema básico de gestión de biblioteca.  
-Incluye autenticación con **JWT**, seguridad con **Spring Security**, manejo de préstamos de libros y persistencia con base de datos relacional.
+TinyLibrary es una **API REST desarrollada con Spring Boot** que simula la gestión de una biblioteca digital.  
+El proyecto implementa **autenticación JWT**, **roles (USER / ADMIN)**, control de accesos, seguridad avanzada y una arquitectura limpia basada en buenas prácticas.
 
-Este proyecto forma parte de mi proceso de aprendizaje y consolidación como **Backend Developer (Java / Spring Boot)**.
-
----
-
-## 📌 Versión actual
-**v0.5.0**
-
-### ¿Qué incluye esta versión?
-- Autenticación con JWT
-- Seguridad stateless con Spring Security
-- Hashing de contraseñas con BCrypt
-- Endpoints protegidos por token
-- CRUDs completos
-- Arquitectura en capas
-- Manejo de excepciones personalizado
+Este proyecto fue creado con fines **educativos y profesionales**, demostrando el flujo completo de autenticación, autorización y gestión de recursos en un backend moderno.
 
 ---
 
-## 🧱 Estado actual del proyecto
+## 🚀 Versión actual
 
-### ✅ Funcionalidades implementadas
+**v1.0.0**
 
-#### 🔐 Autenticación y Seguridad
-- Login mediante email y contraseña
-- Generación de JWT firmado (HS256)
-- Filtro de autenticación personalizado (`OncePerRequestFilter`)
-- Validación de token en cada request
-- Seguridad Stateless
-- Passwords hasheados con BCrypt
-
-#### 📚 Libros (Book)
-- Crear libro (estado inicial `AVAILABLE`)
-- Listar libros
-- Filtrar libros disponibles / prestados
-- Control de estado (`AVAILABLE / BORROWED`)
-
-#### 🔄 Préstamos (Borrow)
-- Registrar préstamo de libro
-- Devolver libro
-- Ver préstamos activos
-- Relación User ↔ Book
-- Control de estados (`BORROWED / RETURNED`)
-
-#### 👤 Usuarios (User)
-- Creación de usuarios
-- Validación de email único
-- Contraseñas encriptadas
-- Relación con préstamos
+> Proyecto funcional y estable, con seguridad basada en JWT y control de roles.
 
 ---
 
-## 🧠 Modelo de dominio
+## ✅ Funcionalidades implementadas
+
+### 🔐 Autenticación y Seguridad
+- Login con **JWT**
+- Tokens firmados con **HS256**
+- Contraseñas **hasheadas con BCrypt**
+- **Roles de usuario**:
+    - `ROLE_USER`
+    - `ROLE_ADMIN`
+- Asignación automática del **primer usuario como ADMIN**
+- Filtros de seguridad personalizados (`OncePerRequestFilter`)
+- Control de acceso por endpoint y método HTTP
+- Manejo de errores de seguridad:
+    - `401 Unauthorized` → Usuario no autenticado
+    - `403 Forbidden` → Usuario sin permisos
+- **Mensajes de error personalizados** (JSON)
+
+---
+
+### 👤 Usuarios
+- Crear usuarios
+- Validación de correo duplicado
+- Obtener perfil del usuario autenticado (`/me`)
+- Obtener lista de usuarios (**solo ADMIN**)
+
+---
+
+### 📖 Libros
+- Crear libros (**ADMIN**)
+- Listar libros (**USER / ADMIN**)
+- Actualizar libros (**ADMIN**)
+- Eliminar libros (**ADMIN**)
+
+---
+
+### 🔄 Préstamos (Borrow)
+- Registrar préstamo (**ADMIN**)
+- Listar préstamos (**ADMIN**)
+- Control de estado:
+    - BORROWED
+    - RETURNED
+
+---
+
+## 🧱 Modelo de dominio
 
 ### User
 - id
 - name
 - age
-- correo (único)
+- correo (email)
 - password (BCrypt)
-- préstamos
+- roleUser (ENUM)
 
 ### Book
 - id
-- name
-- editorial
-- agebook
-- status (`AVAILABLE / BORROWED`)
+- title
+- author
+- available
 
 ### Borrow
 - id
@@ -77,64 +81,80 @@ Este proyecto forma parte de mi proceso de aprendizaje y consolidación como **B
 - book
 - borrowDate
 - returnDate
-- status (`BORROWED / RETURNED`)
+- status
 
 ---
 
 ## 🏗️ Arquitectura
 
-Arquitectura en capas:
-
-- **Controller** → manejo de endpoints HTTP
-- **Service** → lógica de negocio
-- **Repository** → acceso a datos (JPA)
-- **DTOs** → separación entidad / respuesta
-- **Security** → JWT, filtros y configuración
-- **Exception** → manejo centralizado de errores
+- Controllers (REST)
+- Services (lógica de negocio)
+- Repositories (JPA / Hibernate)
+- DTOs (Request / Response)
+- Security Layer:
+    - JWT Filter
+    - SecurityConfig
+    - CustomAccessDeniedHandler
+    - CustomAuthenticationEntryPoint
+- Manejo global de excepciones
+- Separación clara de responsabilidades
 
 ---
 
 ## 🛠️ Tecnologías utilizadas
 
-- Java 17
-- Spring Boot
+- Java 17+
+- Spring Boot 3.5.x
 - Spring Security
-- Spring Web
 - Spring Data JPA
 - JWT (jjwt)
 - BCrypt
-- MySQL / PostgreSQL
+- PostgreSQL
 - Maven
-- Git
+- Postman (testing manual de endpoints)
 
 ---
 
-## 🔐 Seguridad (detalle técnico)
+## 🔒 Seguridad (detalles técnicos)
 
-- Autenticación basada en **JWT**
-- Tokens firmados con clave secreta
-- Filtro personalizado que:
-  - Extrae token del header `Authorization`
-  - Valida firma y expiración
-  - Carga usuario en el `SecurityContext`
-- Endpoints protegidos por configuración de `SecurityFilterChain`
+- Autenticación Stateless
+- Tokens enviados por header:
+- Filtros personalizados para validar:
+- Token
+- Usuario
+- Rol
+- Control fino por endpoint y método HTTP
+- Handlers personalizados para respuestas 401 y 403
 
 ---
 
-## 🚀 Próximos pasos (Roadmap)
+## 🧪 Testing (Roadmap)
 
-- Implementar roles (`ADMIN / USER`)
-- Documentación con Swagger / OpenAPI
-- Tests unitarios
+- Implementar **tests unitarios**
+- Uso de:
+- JUnit 5
+- Mockito
+- Tests planeados:
+- Servicios
+- Seguridad
+- Validaciones
+- Excepciones
+
+---
+
+## 📌 Próximas mejoras
+
+- Tests unitarios con Mockito
+- Paginación y filtros
 - Refresh Token
 - Dockerización
-- Manejo avanzado de permisos
+- Deploy (Railway / Render / AWS)
 
 ---
 
-## 👤 Autor
+## 👨‍💻 Autor
 
 **Jesús Ramírez**  
-Backend Developer — Java & Spring Boot  
+Backend Developer (Java · Spring Boot)
 
-Proyecto desarrollado como parte de mi formación continua y práctica profesional.
+Proyecto desarrollado como parte de formación práctica y preparación profesional.
